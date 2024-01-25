@@ -1,0 +1,59 @@
+# Autotools
+Makefile.in
+/ar-lib
+
+# M4
+autom4te.cache
+/aclocal.m4
+/compile
+/config.guess
+/config.h.in
+/config.h.in~
+/config.sub
+/configure
+/configure~
+/depcomp
+/install-sh
+/missing
+
+# Build directory
+build
+
+# CMake
+_CMakeLists.txt
+
+# IDEs
+.vscode
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
