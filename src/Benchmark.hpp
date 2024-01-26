@@ -2,16 +2,8 @@
 
 #include <memory>
 #include <Grid/Grid.h>
+#include "Enums.hpp"
 #include "FixedIterCG.hpp"
-
-
-enum class RepresentationName
-{
-  Fundamental,
-  Adjoint,
-  TwoIndexSymmetric,
-  TwoIndexAntiSymmetric
-};
 
 
 void initGrid()
@@ -129,6 +121,17 @@ constexpr auto getRepresentation()
 }
 
 
+template<::GroupName groupname>
+constexpr auto getGroupName()
+{
+  using namespace Grid;
+
+  if constexpr (groupname == ::GroupName::SU)
+    return type_identity<Grid::GroupName::SU>{};
+  else if constexpr(groupname == ::GroupName::Sp)
+    return type_identity<Grid::GroupName::Sp>{};
+}
+
 
 template<typename GroupName, int Nc, RepresentationName repname>
 constexpr auto getConfigGroup()
@@ -146,13 +149,14 @@ constexpr auto getConfigGroup()
 }
 
 
-template<typename GroupName, int Nc, RepresentationName RepName>
+template<::GroupName groupname, int Nc, RepresentationName repname>
 void executeBenchmark()
 {
     using namespace Grid;
 
-    typedef typename decltype(getRepresentation<GroupName, Nc, RepName>())::type Representation;
-    typedef typename decltype(getConfigGroup<GroupName, Representation::Dimension, RepName>())::type ConfigGroup;
+    typedef typename decltype(getGroupName<groupname>())::type GridGroupName;
+    typedef typename decltype(getRepresentation<GridGroupName, Nc, repname>())::type Representation;
+    typedef typename decltype(getConfigGroup<GridGroupName, Representation::Dimension, repname>())::type ConfigGroup;
 
     auto grid = createGrid();
     GridRedBlackCartesian rbgrid(&grid);
