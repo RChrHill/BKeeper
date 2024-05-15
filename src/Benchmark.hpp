@@ -2,21 +2,26 @@
 
 #include <memory>
 #include <Grid/Grid.h>
-#include "Enums.hpp"
 #include "FixedIterCG.hpp"
+#include "PerformanceMetrics/Flops.hpp"
+#include "PerformanceMetrics/Comms.hpp"
+#include "PerformanceMetrics/Memory.hpp"
 
 
-void initGrid()
+enum class RepresentationName
+{
+  Fundamental,
+  Adjoint,
+  TwoIndexSymmetric,
+  TwoIndexAntiSymmetric
+};
+
+
+void initGrid(int argc, char** argv)
 {
     using namespace Grid;
 
-    constexpr int grid_argc = 2;
-    char* grid_argv[grid_argc];
-    grid_argv[0] = const_cast<char*>("--grid");
-    grid_argv[1] = const_cast<char*>("4.4.4.8");
-    int _grid_argc = *const_cast<int*>(&grid_argc);
-    char** _grid_argv = grid_argv;
-    Grid_init(&_grid_argc, &_grid_argv);
+    Grid_init(&argc, &argv);
 
     std::cout << GridLogMessage << "Lattice dimensions: " << GridDefaultLatt() << std::endl;
     std::cout << GridLogMessage << "MPI decomposition:  " << GridDefaultMpi() << std::endl;
@@ -33,7 +38,10 @@ Grid::GridCartesian createGrid()
   Coordinate latt_size   = GridDefaultLatt();
   Coordinate simd_layout = GridDefaultSimd(Nd,vComplex::Nsimd());
   Coordinate mpi_layout  = GridDefaultMpi();
-  return GridCartesian(latt_size,simd_layout,mpi_layout);
+  auto grid = GridCartesian(latt_size,simd_layout,mpi_layout);
+  std::cout << GridLogMessage << "Created Grid:" << std::endl;
+  grid.show_decomposition();
+  return grid;
 }
 
 
@@ -72,7 +80,7 @@ auto generateFermionAction(Grid::GridCartesian& grid, Grid::GridRedBlackCartesia
 
 
 template<typename FermionAction>
-void runCG(FermionAction& action, Grid::GridCartesian& grid)
+int runCG(FermionAction& action, Grid::GridCartesian& grid)
 {
   using namespace Grid;
   typedef typename FermionAction::FermionField Field;
@@ -95,6 +103,7 @@ void runCG(FermionAction& action, Grid::GridCartesian& grid)
   Field fermion(&grid);
   FixedIterConjugateGradient<Field> CG(1.0e-10,10000, false);
   CG(hermOp,mdagsrc, fermion);
+  return CG.IterationsToComplete;
 }
 
 
@@ -121,17 +130,6 @@ constexpr auto getRepresentation()
 }
 
 
-template<::GroupName groupname>
-constexpr auto getGroupName()
-{
-  using namespace Grid;
-
-  if constexpr (groupname == ::GroupName::SU)
-    return type_identity<Grid::GroupName::SU>{};
-  else if constexpr(groupname == ::GroupName::Sp)
-    return type_identity<Grid::GroupName::Sp>{};
-}
-
 
 template<typename GroupName, int Nc, RepresentationName repname>
 constexpr auto getConfigGroup()
@@ -149,20 +147,36 @@ constexpr auto getConfigGroup()
 }
 
 
-template<::GroupName groupname, int Nc, RepresentationName repname>
+template<typename GroupName, int Nc, RepresentationName RepName>
 void executeBenchmark()
 {
     using namespace Grid;
 
-    typedef typename decltype(getGroupName<groupname>())::type GridGroupName;
-    typedef typename decltype(getRepresentation<GridGroupName, Nc, repname>())::type Representation;
-    typedef typename decltype(getConfigGroup<GridGroupName, Representation::Dimension, repname>())::type ConfigGroup;
+    // Get benchmark parameters
+    size_t real_size = 8;
+
+    int Nprocs = 1;
+    for (const auto d : GridDefaultMpi())
+        Nprocs *= d;
+    
+    size_t border_size = Nprocs>1? 1 : 0;
+
+    // Begin benchmark
+    typedef typename decltype(getRepresentation<GroupName, Nc, RepName>())::type Representation;
+    typedef typename decltype(getConfigGroup<GroupName, Representation::Dimension, RepName>())::type ConfigGroup;
 
     auto grid = createGrid();
     GridRedBlackCartesian rbgrid(&grid);
     auto gaugefield     = generateUnitGauge<Representation, ConfigGroup>(grid, {0, 1, 2, 3});
     auto fermion_action = generateFermionAction<Representation>(grid, rbgrid, gaugefield, 0.1);
-    runCG(fermion_action, grid);
+    int iterations = runCG(fermion_action, grid);
+    double gflops = CloverCGSiteFlops(iterations, Representation::Dimension);
+    double mcomms = CloverCGSiteCommsMB(iterations, Representation::Dimension, grid, real_size, border_size);
+    double gmem   = CGLocalMemoryGB(iterations, Representation::Dimension, grid, real_size, border_size);
+
+    std::cout << GridLogMessage << "FlOp/S (GB): " << gflops << std::endl;
+    std::cout << GridLogMessage << "Comms  (MB): " << mcomms << std::endl;
+    std::cout << GridLogMessage << "Memory (GB): " << gmem   << std::endl;
 }
 
 
