@@ -17,6 +17,48 @@ AC_PROG_RANLIB
 AM_PROG_AR
 AC_LANG([C++])
 
+########### Group #############
+AC_ARG_VAR([group],
+    [Sets the gauge group.])
+
+if test "${group}" == "SU"; then
+    AC_DEFINE_UNQUOTED([BKEEPER_GAUGEGROUP], [Grid::GroupName::SU], [Gauge group])
+elif test "${group}" == "Sp"; then
+    AC_DEFINE_UNQUOTED([BKEEPER_GAUGEGROUP], [Grid::GroupName::Sp], [Gauge group])
+elif test "x${group}" == "x"; then
+    AC_MSG_ERROR([No value for 'group' configure option provided. Use one of [SU|Sp].])
+else
+    AC_MSG_ERROR([Invalid value for 'group' configure option provided. Use one of [SU|Sp].])
+fi
+
+########### N Colours #############
+AC_ARG_VAR([Nc],
+    [Sets the size of the gauge group.])
+
+if test "x${Nc}" != "x"; then
+    AC_DEFINE_UNQUOTED([BKEEPER_NC], [$Nc], [Number of colours])
+else
+    AC_MSG_ERROR([No value for 'Nc' configure option provided. Provide the number of colours in the gauge group.])
+fi
+
+########### Representation #############
+AC_ARG_VAR([representation],
+    [Sets the number of basis vectors.])
+
+if test "${representation}" == "fundamental"; then
+    AC_DEFINE_UNQUOTED([BKEEPER_REPRESENTATION], [RepresentationName::Fundamental], [Gauge Group Representation])
+elif test "${representation}" == "adjoint"; then
+    AC_DEFINE_UNQUOTED([BKEEPER_REPRESENTATION], [RepresentationName::Adjoint], [Gauge Group Representation])
+elif test "${representation}" == "twoindexsymmetric"; then
+    AC_DEFINE_UNQUOTED([BKEEPER_REPRESENTATION], [RepresentationName::TwoIndexSymmetric], [Gauge Group Representation])
+elif test "${representation}" == "twoindexantisymmetric"; then
+    AC_DEFINE_UNQUOTED([BKEEPER_REPRESENTATION], [RepresentationName::TwoIndexAntiSymmetric], [Gauge Group Representation])
+elif test "x${representation}" == "x"; then
+    AC_MSG_ERROR([No value for 'representation' configure option provided. Use one of [fundamental|adjoint|twoindexsymmetric|twoindexantisymmetric].])
+else
+    AC_MSG_ERROR([Invalid value for 'representation' configure option provided. Use one of [fundamental|adjoint|twoindexsymmetric|twoindexantisymmetric].])
+fi
+
 
 AC_ARG_WITH([grid],
     [AS_HELP_STRING([--with-grid=<prefix>],
