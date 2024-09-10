@@ -1,55 +1,59 @@
-#include "Benchmark.hpp"
+#include "Benchmark/Benchmark.hpp"
+#include "Benchmark/Dispatch.hpp"
 #include "Global.h" // Contains macros for executeBenchmark template parameters
+#include <iostream>
+
+
+GroupInfo parseArgs(int argc, char** argv)
+{
+    GroupInfo out;
+    for (int i=1; i < argc; ++i)
+    {
+        std::string arg(argv[i]);
+        if (arg == "--group")
+        {
+            if (i+1 >= argc)         continue;
+            if (argv[i+1][0] == '-') continue;
+            out.group = std::string(argv[i+1]);
+            *argv[i+0] = '\x00';
+            *argv[i+1] = '\x00';
+            ++i;
+        }
+        else if (arg == "--Nc")
+        {
+            if (i+1 >= argc)         continue;
+            if (argv[i+1][0] == '-') continue;
+            try
+            {
+                out.Nc = std::stoi(std::string(argv[i+1]));
+            }
+            catch(const std::runtime_error& error)
+            {
+                std::cout << "'--Nc' argument cannot be interpreted as an integer: " << argv[i+1] << std::endl;
+            }
+            *argv[i+0] = '\x00';
+            *argv[i+1] = '\x00';
+            ++i;
+        }
+        else if (arg == "--representation")
+        {
+            if (i+1 >= argc)         continue;
+            if (argv[i+1][0] == '-') continue;
+            out.representation = std::string(argv[i+1]);
+            *argv[i+0] = '\x00';
+            *argv[i+1] = '\x00';
+            ++i;
+        }
+    }
+    return out;
+}
 
 
 int main(int argc, char** argv)
 {
+    GroupInfo group_info = parseArgs(argc, argv);
     initGrid(argc, argv);
-
-    std::cout << GridLogMessage << "==================================================" << std::endl;
-    
-    #ifdef BKEEPER_DEFAULTGAUGEGROUP
-    std::cout << GridLogMessage << "No gauge group defined by autotools: defaulting to SU" << std::endl;
-    #endif
-
-    #ifdef BKEEPER_DEFAULTNC
-    std::cout << GridLogMessage << "No number of colours defined by autotools: defaulting to 3" << std::endl;
-    #endif
-
-    #ifdef BKEEPER_DEFAULTREPRESENTATION
-    std::cout << GridLogMessage << "No group representation defined by autotools: defaulting to Fundamental" << std::endl;
-    #endif
-
-    // Message to remind which group + rep the benchmark was compiled for.
-    std::cout << GridLogMessage << "Using ";
-    if constexpr(std::is_same_v<BKEEPER_GAUGEGROUP, Grid::GroupName::SU>)
-        std::cout << "SU";
-    else if constexpr(std::is_same_v<BKEEPER_GAUGEGROUP, Grid::GroupName::Sp>)
-        std::cout << "Sp";
-    std::cout << "(" << BKEEPER_NC << ")";
-    constexpr RepresentationName repname = BKEEPER_REPRESENTATION;
-    switch(repname)
-    {
-        case RepresentationName::Fundamental:
-            std::cout << ", Fundamental";
-            break;
-        case RepresentationName::Adjoint:
-            std::cout << ", Adjoint";
-            break;
-        case RepresentationName::TwoIndexSymmetric:
-            std::cout << ", TwoIndexSymmetric";
-            break;
-        case RepresentationName::TwoIndexAntiSymmetric:
-            std::cout << ", TwoIndexAntiSymmetric";
-            break;
-        default:
-            break;
-    }
-    std::cout << " representation" << std::endl;
-
-    std::cout << GridLogMessage << "==================================================" << std::endl;
-    
-    executeBenchmark<BKEEPER_GAUGEGROUP, BKEEPER_NC, BKEEPER_REPRESENTATION>();
+    executeBenchmark(group_info);
     teardownGrid();
     return 0;
 }
