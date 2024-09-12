@@ -30,14 +30,18 @@ The 'disable' versions of the above do the opposite. All benchmarks are enabled 
 Here are a few example options:
 - `--disable-all --enable-su2adj`: Only compile support for SU(2) adjoint.
 - `--disable-su2adj` Compile all benchmarks except SU(2) adjoint.
-- ``: No options: compile all benchmarks.
+- ` `: No options: compile all benchmarks.
 - `--enable-su2adj`: Compile all benchmarks. `--enable-su2adj` is redundant.
 - `--disable-all --disable-su2adj`: Disable all benchmarks. `--disable-su2adj` is redundant.
 
 ## Running
 To run the benchmark, execute
-`/path/to/BKeeper [grid options] --group [SU|Sp] --Nc [2|3|4] --representation [fundamental|adjoint|twoindexsymmetric|twoindexantisymmetric]`
-If a valid combination of `--group`, `--Nc`, and `--representation` is passed (refer to the list of compilation options in the [previous section](#Compiling)), the benchmark will be executed for that gauge group, if compilation support was enabled for it. There are two errors that may occur:
+`/path/to/BKeeper [grid options] --benchmarks [identifiers]`
+In the argument list, 'identifiers' is a comma-separated list of targets that you have compiled BKeeper for. For example, to run the benchmark for SU(2) Adjoint and Sp(4) fundamental in the same call for a 64^3 x 96 lattice decomposed over 2 MPI processes in each dimension, use
+`/path/to/BKeeper --grid 64.64.64.96 --mpi 2.2.2.2 --benchmarks su2adj,sp4fund`. There are two errors that may occur:
 - If the desired gauge group was not included when compiling the program, you will receive an error message stating this, which is resolved by re-compiling with support for that gauge group included in the `configure` step.
 - If you pass an combination for which BKeeper does not define a benchmark, you will instead receive a message informing you of this. If [Grid](https://github.com/paboyle/Grid) in principle supports the group you want to run, make a pull request adding support to BKeeper, following the existing implementation as a reference. If Grid does not support the gauge group you want to run, you will first need to have this functionality merged into Grid, and then support can be added to BKeeper.
+
+## To-do
+- Create an XML input for the program instead of using command-line specification for the benchmarks, that can also handle the selection of an action and choose parameters for this action.
 
