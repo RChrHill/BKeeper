@@ -91,7 +91,7 @@ fi
 ########### SU(3) TwoIndexSymm ###########
 AC_ARG_ENABLE([su3tis], [Enable compilation for SU(3) Two-Index Symmetric.], [:], [enable_su3tis=auto])
 if test "x${enable_su3tis}" = "xyes"; then
-    AC_DEFINE_UNQUOTED([BKEEPER_ENABLE_SU2TIS], [], [Enable SU(3) Two-Index Symmetric])
+    AC_DEFINE_UNQUOTED([BKEEPER_ENABLE_SU3TIS], [], [Enable SU(3) Two-Index Symmetric])
     AC_MSG_NOTICE(Enabling SU(3) two-index symmetric)
 elif test "x${enable_su3tis}" = "xno"; then
     AC_DEFINE_UNQUOTED([BKEEPER_DISABLE_SU3TIS], [], [Disable SU(3) Two-Index Symmetric])
