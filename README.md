@@ -39,6 +39,7 @@ To run the benchmark, execute
 `/path/to/BKeeper /path/to/params/file [grid options]`
 In the argument list, 'path/to/params/file' is a path to a BKeeper parameter file. This is an XML file with the following structure:
 ```
+<?xml version="1.0"?>
 <grid>
   <benchmarks>
     <elem>benchmark ID 1</elem>
@@ -49,6 +50,7 @@ In the argument list, 'path/to/params/file' is a path to a BKeeper parameter fil
 ```
 Where `benchmark ID X` should be replaced with a benchmark ID that BKeeper was compiled for. For example, a parameter file that runs the SU(2) adjoint benchmark and SU(3) fundamental benchmark would be:
 ```
+<?xml version="1.0"?>
 <grid>
   <benchmarks>
     <elem>su2adj</elem>
