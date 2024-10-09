@@ -7,6 +7,7 @@
 #include "PerformanceMetrics/Comms.hpp"
 #include "PerformanceMetrics/Memory.hpp"
 #include "../GaugeGroupInfo.hpp"
+#include "../Logger/BKeeperLog.hpp"
 
 
 void initGrid(int argc, char** argv);
@@ -19,7 +20,7 @@ auto generateUnitGauge(Grid::GridCartesian& grid, const std::vector<int>& seed)
 {
   using namespace Grid;
 
-  std::cout << GridLogMessage << "Creating gauge..." << std::endl;
+  std::cout << BKeeperLogMessage << "Creating gauge..." << std::endl;
 
   GridParallelRNG rng(&grid);
   rng.SeedFixedIntegers(seed);
@@ -33,7 +34,7 @@ template<typename Representation>
 auto generateFermionAction(Grid::GridCartesian& grid, Grid::GridRedBlackCartesian& rbgrid, GaugeField<Representation>& gaugefield, Grid::RealD mass)
 {
   using namespace Grid;
-  std::cout << GridLogMessage << "Creating Fermion Action..." << std::endl;
+  std::cout << BKeeperLogMessage << "Creating Fermion Action..." << std::endl;
 
   typedef WilsonFermion<Impl<Representation>> WilsonFermion;
 
@@ -57,7 +58,7 @@ int runCG(FermionAction& action, Grid::GridCartesian& grid)
   MdagMLinearOperator<FermionAction,Field> hermOp(action);
 
   // Create point source
-  std::cout << GridLogMessage << "Creating point source..." << std::endl;
+  std::cout << BKeeperLogMessage << "Creating point source..." << std::endl;
   Field src(&grid);
   src = Zero();
   FieldSite unit;
@@ -65,7 +66,7 @@ int runCG(FermionAction& action, Grid::GridCartesian& grid)
   pokeSite(unit, src, Coordinate({0, 0, 0, 0}));
 
   // Run CG
-  std::cout << GridLogMessage << "Running CG..." << std::endl;
+  std::cout << BKeeperLogMessage << "Running CG..." << std::endl;
   Field mdagsrc(&grid);
   action.Mdag(src, mdagsrc);
   Field fermion(&grid);
@@ -102,7 +103,7 @@ void executeBenchmark()
     double mcomms         = CloverCGSiteCommsMB(iterations, Representation::Dimension, grid, real_size, border_size);
     double gmem           = CGLocalMemoryGB(iterations, Representation::Dimension, grid, real_size, border_size);
 
-    std::cout << GridLogMessage << "FlOp/S (GB): " << gflops << std::endl;
-    std::cout << GridLogMessage << "Comms  (MB): " << mcomms << std::endl;
-    std::cout << GridLogMessage << "Memory (GB): " << gmem   << std::endl;
+    std::cout << BKeeperLogResult << "FlOp/S (GB): " << gflops << std::endl;
+    std::cout << BKeeperLogResult << "Comms  (MB): " << mcomms << std::endl;
+    std::cout << BKeeperLogResult << "Memory (GB): " << gmem   << std::endl;
 }

@@ -18,6 +18,8 @@ BKeeper_SOURCES = src/Instantiation/SU2Fund/Wilson.cpp \
                   src/Instantiation/Sp4TwoIndexAntiSymmetric/Wilson.cpp \
                   src/main.cpp \
                   src/Benchmark/Benchmark.cpp \
+                  src/Logger/BKeeperLog.cpp \
+                  src/Parameters/Parameters.cpp \
                   src/Benchmark/PerformanceMetrics/Comms.cpp \
                   src/Benchmark/PerformanceMetrics/Flops.cpp \
                   src/Benchmark/PerformanceMetrics/Memory.cpp \
