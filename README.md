@@ -36,12 +36,32 @@ Here are a few example options:
 
 ## Running
 To run the benchmark, execute
-`/path/to/BKeeper [grid options] --benchmarks [identifiers]`
-In the argument list, 'identifiers' is a comma-separated list of targets that you have compiled BKeeper for. For example, to run the benchmark for SU(2) Adjoint and Sp(4) fundamental in the same call for a 64^3 x 96 lattice decomposed over 2 MPI processes in each dimension, use
-`/path/to/BKeeper --grid 64.64.64.96 --mpi 2.2.2.2 --benchmarks su2adj,sp4fund`. There are two errors that may occur:
+`/path/to/BKeeper /path/to/params/file [grid options]`
+In the argument list, 'path/to/params/file' is a path to a BKeeper parameter file. This is an XML file with the following structure:
+```
+<grid>
+  <benchmarks>
+    <elem>benchmark ID 1</elem>
+    <elem>benchmark ID 2</elem>
+    ...
+  </benchmarks>
+</grid>
+```
+Where `benchmark ID X` should be replaced with a benchmark ID that BKeeper was compiled for. For example, a parameter file that runs the SU(2) adjoint benchmark and SU(3) fundamental benchmark would be:
+```
+<grid>
+  <benchmarks>
+    <elem>su2adj</elem>
+    <elem>su3fund</elem>
+  </benchmarks>
+</grid> 
+```
+
+There are three errors that may occur:
+- If no recognised benchmarks are included in the parameters file, the program will gracefully exit without spinning up Grid.
 - If the desired gauge group was not included when compiling the program, you will receive an error message stating this, which is resolved by re-compiling with support for that gauge group included in the `configure` step.
 - If you pass an combination for which BKeeper does not define a benchmark, you will instead receive a message informing you of this. If [Grid](https://github.com/paboyle/Grid) in principle supports the group you want to run, make a pull request adding support to BKeeper, following the existing implementation as a reference. If Grid does not support the gauge group you want to run, you will first need to have this functionality merged into Grid, and then support can be added to BKeeper.
 
 ## To-do
-- Create an XML input for the program instead of using command-line specification for the benchmarks, that can also handle the selection of an action and choose parameters for this action.
-
+- Address some bugs in the performance metrics (FlOps reports total FLOp count, not FLOp/s; communications metric does not scale with the decomposition)
+- Make the benchmark spack-compatible
