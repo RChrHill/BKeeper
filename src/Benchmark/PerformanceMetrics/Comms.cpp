@@ -22,5 +22,5 @@ double g5CloverTermRbSqComms(Grid::GridCartesian& grid, size_t fermion_rep_eleme
 double CloverCGSiteCommsMB(double iterations, size_t fermion_rep_elements, Grid::GridCartesian& grid, size_t real_size, size_t border_size)
 {
     double op_comms = g5CloverTermRbSqComms(grid, fermion_rep_elements, real_size, border_size);
-    return iterations * (2*op_comms) / 1.e6;
+    return (iterations+1) * op_comms / 1.e6;
 }
