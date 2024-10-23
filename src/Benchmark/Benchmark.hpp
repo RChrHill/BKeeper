@@ -100,17 +100,17 @@ void executeBenchmark()
     GridRedBlackCartesian rbgrid(&grid);
     auto   gaugefield     = generateUnitGauge<Representation, ConfigGroup>(grid, {0, 1, 2, 3});
     auto   fermion_action = generateFermionAction<Representation>(grid, rbgrid, gaugefield, 0.1);
-    CGTimer.start();
+    CGTimer.Start();
     int    iterations     = runCG(fermion_action, grid);
-    CGTimer.stop();
+    CGTimer.Stop();
     double gflops         = CloverCGSiteFlops(iterations, Representation::Dimension);
     double mcomms         = CloverCGSiteCommsMB(iterations, Representation::Dimension, grid, real_size, border_size);
     double gmem           = CGLocalMemoryGB(iterations, Representation::Dimension, grid, real_size, border_size);
 
-    double time = CGTimer.Elapsed();
+    double time = std::chrono::duration<double>(CGTimer.Elapsed()).count();
 
-    std::cout << BKeeperLogResult << "CG Run Time (s): " << elapsed << std::endl;
-    std::cout << BKeeperLogResult << "FlOp/S (GB/s):   " << gflops/elapsed << std::endl;
+    std::cout << BKeeperLogResult << "CG Run Time (s): " << time << std::endl;
+    std::cout << BKeeperLogResult << "FlOp/S (GB/s):   " << gflops/time << std::endl;
     std::cout << BKeeperLogResult << "Comms  (MB):     " << mcomms << std::endl;
     std::cout << BKeeperLogResult << "Memory (GB):     " << gmem   << std::endl;
 }
