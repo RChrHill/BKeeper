@@ -33,7 +33,8 @@ inline size_t haloSites(
     size_t x, size_t y, size_t z, size_t t, size_t Ls,
     size_t borderX, size_t borderY, size_t borderZ, size_t borderT)
 {
-    return 2*localSites(x,y,z,t,Ls) * (static_cast<double>(borderX)/x) * (static_cast<double>(borderY)/y) * (static_cast<double>(borderZ)/z) * (static_cast<double>(borderT)/t);
+    //return 2*localSites(x,y,z,t,Ls) * (static_cast<double>(borderX)/x) * (static_cast<double>(borderY)/y) * (static_cast<double>(borderZ)/z) * (static_cast<double>(borderT)/t);
+    return (x-2*borderX)*(y-2*borderY)(z-2*borderZ)*(t-2*borderT);
 }
 
 
