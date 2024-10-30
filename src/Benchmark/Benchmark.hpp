@@ -97,20 +97,24 @@ void executeBenchmark()
     typedef typename decltype(getConfigGroup   <GroupName, Representation::Dimension, RepName>())::type ConfigGroup;
 
     auto grid = createGrid();
+    int volume = 1;
+    for (const auto d : grid.FullDimensions())
+        volume *= d;
+    
     GridRedBlackCartesian rbgrid(&grid);
     auto   gaugefield     = generateUnitGauge<Representation, ConfigGroup>(grid, {0, 1, 2, 3});
     auto   fermion_action = generateFermionAction<Representation>(grid, rbgrid, gaugefield, 0.1);
     CGTimer.Start();
     int    iterations     = runCG(fermion_action, grid);
     CGTimer.Stop();
-    double gflops         = CloverCGSiteFlops(iterations, Representation::Dimension);
-    double mcomms         = CloverCGSiteCommsMB(iterations, Representation::Dimension, grid, real_size, border_size);
-    double gmem           = CGLocalMemoryGB(iterations, Representation::Dimension, grid, real_size, border_size);
+    double gflops = volume*CloverCGSiteFlops(iterations, Representation::Dimension);
+    double mcomms = CloverCGSiteCommsMB(iterations, Representation::Dimension, grid, real_size, border_size);
+    double gmem   = Nprocs*CGLocalMemoryGB(iterations, Representation::Dimension, grid, real_size, border_size);
 
     double time = std::chrono::duration<double>(CGTimer.Elapsed()).count();
 
     std::cout << BKeeperLogResult << "CG Run Time (s): " << time << std::endl;
-    std::cout << BKeeperLogResult << "FlOp/S (GB/s):   " << gflops/time << std::endl;
+    std::cout << BKeeperLogResult << "FlOp/S (GFlOp/s):   " << gflops/time << std::endl;
     std::cout << BKeeperLogResult << "Comms  (MB):     " << mcomms << std::endl;
     std::cout << BKeeperLogResult << "Memory (GB):     " << gmem   << std::endl;
 }
