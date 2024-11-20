@@ -18,38 +18,38 @@
 #include "Specialisations/Sp4TwoIndexAntiSymm.hpp"
 
 
-void executeBenchmark(const GroupInfo& group_info)
+void executeBenchmark(const GroupInfo& group_info, BKeeperParameters& params)
 {
     if      (group_info==SU2FundamentalGroupInfo)
-        executeBenchmarkSU2Fundamental();
+        executeBenchmarkSU2Fundamental(params);
     else if (group_info==SU2AdjointGroupInfo)
-        executeBenchmarkSU2Adjoint();
+        executeBenchmarkSU2Adjoint(params);
     else if (group_info==SU2TwoIndexSymmetricGroupInfo)
-        executeBenchmarkSU2TwoIndexSymmetric();
+        executeBenchmarkSU2TwoIndexSymmetric(params);
     else if (group_info==SU2TwoIndexAntiSymmetricGroupInfo)
-        executeBenchmarkSU2TwoIndexAntiSymmetric();
+        executeBenchmarkSU2TwoIndexAntiSymmetric(params);
     else if (group_info==SU3FundamentalGroupInfo)
-        executeBenchmarkSU3Fundamental();
+        executeBenchmarkSU3Fundamental(params);
     else if (group_info==SU3AdjointGroupInfo)
-        executeBenchmarkSU3Adjoint();
+        executeBenchmarkSU3Adjoint(params);
     else if (group_info==SU3TwoIndexSymmetricGroupInfo)
-        executeBenchmarkSU3TwoIndexSymmetric();
+        executeBenchmarkSU3TwoIndexSymmetric(params);
     else if (group_info==SU3TwoIndexAntiSymmetricGroupInfo)
-        executeBenchmarkSU3TwoIndexAntiSymmetric();
+        executeBenchmarkSU3TwoIndexAntiSymmetric(params);
     else if (group_info==SU4FundamentalGroupInfo)
-        executeBenchmarkSU4Fundamental();
+        executeBenchmarkSU4Fundamental(params);
     else if (group_info==SU4AdjointGroupInfo)
-        executeBenchmarkSU4Adjoint();
+        executeBenchmarkSU4Adjoint(params);
     else if (group_info==SU4TwoIndexSymmetricGroupInfo)
-        executeBenchmarkSU4TwoIndexSymmetric();
+        executeBenchmarkSU4TwoIndexSymmetric(params);
     else if (group_info==SU4TwoIndexAntiSymmetricGroupInfo)
-        executeBenchmarkSU4TwoIndexAntiSymmetric();
+        executeBenchmarkSU4TwoIndexAntiSymmetric(params);
     else if (group_info==Sp4FundamentalGroupInfo)
-        executeBenchmarkSp4Fundamental();
+        executeBenchmarkSp4Fundamental(params);
     else if (group_info==Sp4TwoIndexSymmetricGroupInfo)
-        executeBenchmarkSp4TwoIndexSymmetric();
+        executeBenchmarkSp4TwoIndexSymmetric(params);
     else if (group_info==Sp4TwoIndexAntiSymmetricGroupInfo)
-        executeBenchmarkSp4TwoIndexAntiSymmetric();
+        executeBenchmarkSp4TwoIndexAntiSymmetric(params);
     else
         std::cout << "No benchmark is available for '" << group_info.tag() << "'" << std::endl;
 }

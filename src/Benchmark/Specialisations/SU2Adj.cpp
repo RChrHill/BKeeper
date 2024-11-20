@@ -4,10 +4,10 @@
 #include "../Benchmark.hpp"
 
 
-void executeBenchmarkSU2Adjoint()
+void executeBenchmarkSU2Adjoint(BKeeperParameters& params)
 {
     #ifdef BKEEPER_SU2ADJ
-    executeBenchmark<Grid::GroupName::SU, 2, RepresentationName::Adjoint>();
+    executeBenchmark<Grid::GroupName::SU, 2, RepresentationName::Adjoint>(params);
     #else
     std::cout << "BKeeper was not compiled for SU(2), Adjoint" << std::endl;
     exit(0);

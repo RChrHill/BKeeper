@@ -46,9 +46,16 @@ In the argument list, 'path/to/params/file' is a path to a BKeeper parameter fil
     <elem>benchmark ID 2</elem>
     ...
   </benchmarks>
+  <iterations>...</iterations>
+  <mass...</mass>
 </grid>
 ```
-Where `benchmark ID X` should be replaced with a benchmark ID that BKeeper was compiled for. For example, a parameter file that runs the SU(2) adjoint benchmark and SU(3) fundamental benchmark would be:
+where
+- `benchmark ID X` should be replaced with a benchmark ID that BKeeper was compiled for. 
+- `iterations` is the number of iterations to run the CG solver for.
+- `mass` is the mass of the fermion propagator being solved for in lattice units.
+
+For example, a parameter file that runs the SU(2) adjoint benchmark and SU(3) fundamental benchmark for 50 iterations for m=0.1 would be:
 ```
 <?xml version="1.0"?>
 <grid>
@@ -56,6 +63,8 @@ Where `benchmark ID X` should be replaced with a benchmark ID that BKeeper was c
     <elem>su2adj</elem>
     <elem>su3fund</elem>
   </benchmarks>
+  <iterations>50</iterations>
+  <mass>0.1</mass>
 </grid> 
 ```
 

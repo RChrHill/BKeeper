@@ -4,10 +4,10 @@
 #include "../Benchmark.hpp"
 
 
-void executeBenchmarkSU3TwoIndexSymmetric()
+void executeBenchmarkSU3TwoIndexSymmetric(BKeeperParameters& params)
 {
     #ifdef BKEEPER_SU3TIS
-    executeBenchmark<Grid::GroupName::SU, 3, RepresentationName::TwoIndexSymmetric>();
+    executeBenchmark<Grid::GroupName::SU, 3, RepresentationName::TwoIndexSymmetric>(params);
     #else
     std::cout << "BKeeper was not compiled for SU(3), TwoIndexSymmetric" << std::endl;
     exit(0);

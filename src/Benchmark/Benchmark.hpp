@@ -8,6 +8,7 @@
 #include "PerformanceMetrics/Memory.hpp"
 #include "../GaugeGroupInfo.hpp"
 #include "../Logger/BKeeperLog.hpp"
+#include "../Parameters/Parameters.hpp"
 
 
 void initGrid(int argc, char** argv);
@@ -49,7 +50,7 @@ auto generateFermionAction(Grid::GridCartesian& grid, Grid::GridRedBlackCartesia
 
 
 template<typename FermionAction>
-int runCG(FermionAction& action, Grid::GridCartesian& grid)
+int runCG(FermionAction& action, Grid::GridCartesian& grid, Integer iteration_count)
 {
   using namespace Grid;
   typedef typename FermionAction::FermionField Field;
@@ -70,14 +71,14 @@ int runCG(FermionAction& action, Grid::GridCartesian& grid)
   Field mdagsrc(&grid);
   action.Mdag(src, mdagsrc);
   Field fermion(&grid);
-  FixedIterConjugateGradient<Field> CG(1.0e-10,10000, false);
+  FixedIterConjugateGradient<Field> CG(1.0e-10, iteration_count, false);
   CG(hermOp,mdagsrc, fermion);
   return CG.IterationsToComplete;
 }
 
 
 template<typename GroupName, int Nc, RepresentationName RepName>
-void executeBenchmark()
+void executeBenchmark(BKeeperParameters& params)
 {
     using namespace Grid;
 
@@ -103,9 +104,9 @@ void executeBenchmark()
     
     GridRedBlackCartesian rbgrid(&grid);
     auto   gaugefield     = generateUnitGauge<Representation, ConfigGroup>(grid, {0, 1, 2, 3});
-    auto   fermion_action = generateFermionAction<Representation>(grid, rbgrid, gaugefield, 0.1);
+    auto   fermion_action = generateFermionAction<Representation>(grid, rbgrid, gaugefield, params.mass);
     CGTimer.Start();
-    int    iterations     = runCG(fermion_action, grid);
+    int    iterations     = runCG(fermion_action, grid, params.iterations);
     CGTimer.Stop();
     double gflops = volume*CloverCGSiteFlops(iterations, Representation::Dimension);
     double mcomms = CloverCGSiteCommsMB(iterations, Representation::Dimension, grid, real_size, border_size);

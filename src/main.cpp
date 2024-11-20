@@ -73,18 +73,30 @@ int main(int argc, char** argv)
     else
     {
         initGrid(argc, argv);
+
+        {
+            std::string msg = "# Setting up BKeeper with " + std::to_string(params.iterations) + " iterations and m=" + std::to_string(params.mass) + " #";
+            std::string borderline = "";
+            for (int i=0; i < msg.size(); ++i)
+                borderline += "#";
+
+            std::cout << BKeeperLogMessage << borderline << std::endl;
+            std::cout << BKeeperLogMessage << msg        << std::endl;
+            std::cout << BKeeperLogMessage << borderline << std::endl;
+        }
+
         for (const auto& group_info : group_infos)
         {
             std::string msg = "# Performing benchmark for " + group_info.tag() + " #";
 
-            std::string first_line = "";
+            std::string borderline = "";
             for (int i=0; i < msg.size(); ++i)
-                first_line += "#";
+                borderline += "#";
 
-            std::cout << BKeeperLogMessage << first_line << std::endl;
+            std::cout << BKeeperLogMessage << borderline << std::endl;
             std::cout << BKeeperLogMessage << msg        << std::endl;
-            std::cout << BKeeperLogMessage << first_line << std::endl;
-            executeBenchmark(group_info);
+            std::cout << BKeeperLogMessage << borderline << std::endl;
+            executeBenchmark(group_info, params);
         }
         teardownGrid();
     }

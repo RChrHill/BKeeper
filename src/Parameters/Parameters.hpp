@@ -7,6 +7,8 @@ struct BKeeperParameters : Grid::Serializable
 {
     GRID_SERIALIZABLE_CLASS_MEMBERS(
         BKeeperParameters,
+        int,                      iterations,
+        double,                   mass,
         std::vector<std::string>, benchmarks
     )
 };
