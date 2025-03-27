@@ -4,7 +4,7 @@ A [Grid](https://github.com/paboyle/Grid) benchmark for the Conjugate Gradient s
 ## Compiling
 1) Run `bootstrap.sh`
 2) Create and `cd` into a build directory as `mkdir build; cd build`
-3) Run `../configure --prefix=<path/to/install/directory> --with-grid=<path/to/grid/install> CC=<grid CC> CXX=<grid CXX> \[options\]`
+3) Run `../configure --prefix=<path/to/install/directory> --with-grid=<path/to/grid/install> CC=<grid CC> CXX=<grid CXX> [options]`
 4) `make && make install`
 
 The `options` parameters stands in place for the options used to enable or disable compilation for individual gauge groups. These options are:
@@ -23,6 +23,7 @@ The `options` parameters stands in place for the options used to enable or disab
 --enable-su4tis  [Explicitly enables compilation for SU(4) two-index symmetric]
 --enable-su4tias [Explicitly enables compilation for SU(4) two-index antisymmetric]
 --enable-sp4fund [Explicitly enables compilation for Sp(4) fundamental]
+--enable-sp4adj  [Explicitly enables compilation for Sp(4) adjoint]
 --enable-sp4tis  [Explicitly enables compilation for Sp(4) two-index symmetric]
 --enable-sp4tias [Explicitly enables compilation for Sp(4) two-index antisymmetric]
 ```
@@ -73,6 +74,3 @@ There are three errors that may occur:
 - If the desired gauge group was not included when compiling the program, you will receive an error message stating this, which is resolved by re-compiling with support for that gauge group included in the `configure` step.
 - If you pass an combination for which BKeeper does not define a benchmark, you will instead receive a message informing you of this. If [Grid](https://github.com/paboyle/Grid) in principle supports the group you want to run, make a pull request adding support to BKeeper, following the existing implementation as a reference. If Grid does not support the gauge group you want to run, you will first need to have this functionality merged into Grid, and then support can be added to BKeeper.
 
-## To-do
-- Address some bugs in the performance metrics (FlOps reports total FLOp count, not FLOp/s; communications metric does not scale with the decomposition)
-- Make the benchmark spack-compatible
