@@ -149,7 +149,7 @@ elif test "x${enable_su4tias}" = "xno"; then
 fi
 
 ########### Sp(4) Fund ###########
-AC_ARG_ENABLE([sp4fund], [Enable compilation for Sp(4) Fundamental.], [:], [enable_supfund=auto])
+AC_ARG_ENABLE([sp4fund], [Enable compilation for Sp(4) Fundamental.], [:], [enable_sp4fund=auto])
 if test "x${enable_sp4fund}" = "xyes"; then
     AC_DEFINE_UNQUOTED([BKEEPER_ENABLE_Sp4FUND], [], [Enable Sp(4) Fundamental])
     AC_MSG_NOTICE(Enabling Sp(4) fundamental)
