@@ -183,7 +183,7 @@ AC_ARG_WITH([grid],
     [AS_HELP_STRING([--with-grid=<prefix>],
     [try this for a non-standard install prefix of Grid])],
     [PATH="$with_grid/bin$PATH_SEPARATOR$PATH"]
-    [CXXFLAGS="$CXXFLAGS -I$with_grid/include"]
+    [CXXFLAGS="$CXXFLAGS -I$with_grid/include -I$with_grid/include/Grid"]
     [LDFLAGS="$LDFLAGS -L$with_grid/lib"])
 
 AC_CHECK_PROG([GRIDCONF],[grid-config],[yes])
