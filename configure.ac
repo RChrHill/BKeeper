@@ -158,6 +158,16 @@ elif test "x${enable_sp4fund}" = "xno"; then
     AC_MSG_NOTICE(Disabling Sp(4) fundamental)
 fi
 
+########### Sp(4) Adj ###########
+AC_ARG_ENABLE([sp4adj], [Enable compilation for Sp(4) Fundamental.], [:], [enable_sp4adj=auto])
+if test "x${enable_sp4adj}" = "xyes"; then
+    AC_DEFINE_UNQUOTED([BKEEPER_ENABLE_Sp4ADJ], [], [Enable Sp(4) Adjoint])
+    AC_MSG_NOTICE(Enabling Sp(4) adjoint)
+elif test "x${enable_sp4adj}" = "xno"; then
+    AC_DEFINE_UNQUOTED([BKEEPER_DISABLE_Sp4ADJ], [], [Disable Sp(4) Adjoint])
+    AC_MSG_NOTICE(Disabling Sp(4) adjoint)
+fi
+
 ########### Sp(4) TwoIndexSymm ###########
 AC_ARG_ENABLE([sp4tis], [Enable compilation for Sp(4) Two-Index Symmetric.], [:], [enable_sp4tis=auto])
 if test "x${enable_sp4tis}" = "xyes"; then

@@ -8,7 +8,7 @@
 
 NAMESPACE_BEGIN(Grid);
 
-#ifdef BKEEPER_Sp4TIS
+#if defined(BKEEPER_Sp4TIS) || defined(BKEEPER_Sp4ADJ)
 template class WilsonFermion<Sp4TwoIndexSymmetricWilsonImplF>;
 template class WilsonFermion<Sp4TwoIndexSymmetricWilsonImplD>;
 #endif

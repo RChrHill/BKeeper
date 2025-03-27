@@ -14,6 +14,7 @@
 #include "Specialisations/SU4TwoIndexSymm.hpp"
 #include "Specialisations/SU4TwoIndexAntiSymm.hpp"
 #include "Specialisations/Sp4Fund.hpp"
+#include "Specialisations/Sp4Adj.hpp"
 #include "Specialisations/Sp4TwoIndexSymm.hpp"
 #include "Specialisations/Sp4TwoIndexAntiSymm.hpp"
 
@@ -46,6 +47,8 @@ void executeBenchmark(const GroupInfo& group_info, BKeeperParameters& params)
         executeBenchmarkSU4TwoIndexAntiSymmetric(params);
     else if (group_info==Sp4FundamentalGroupInfo)
         executeBenchmarkSp4Fundamental(params);
+    else if (group_info==Sp4AdjointGroupInfo)
+        executeBenchmarkSp4TwoIndexSymmetric(params); // This is intentional: Adj and TIS are the same
     else if (group_info==Sp4TwoIndexSymmetricGroupInfo)
         executeBenchmarkSp4TwoIndexSymmetric(params);
     else if (group_info==Sp4TwoIndexAntiSymmetricGroupInfo)

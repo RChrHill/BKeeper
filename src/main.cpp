@@ -41,6 +41,8 @@ std::vector<GroupInfo> produceBenchmarkSchedule(const std::vector<std::string>& 
         // Sp4
         else if (group=="sp4fund")
             out.push_back(Sp4FundamentalGroupInfo);
+        else if (group=="sp4adj")
+            out.push_back(Sp4AdjointGroupInfo);
         else if (group=="sp4tis")
             out.push_back(Sp4TwoIndexSymmetricGroupInfo);
         else if (group=="sp4tias")

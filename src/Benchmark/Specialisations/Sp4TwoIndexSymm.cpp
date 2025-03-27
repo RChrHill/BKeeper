@@ -6,7 +6,7 @@
 
 void executeBenchmarkSp4TwoIndexSymmetric(BKeeperParameters& params)
 {
-    #ifdef BKEEPER_Sp4TIS
+    #if defined(BKEEPER_Sp4TIS) || defined(BKEEPER_Sp4ADJ)
     executeBenchmark<Grid::GroupName::Sp, 4, RepresentationName::TwoIndexSymmetric>(params);
     #else
     std::cout << "BKeeper was not compiled for Sp(4), TwoIndexSymmetric" << std::endl;

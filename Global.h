@@ -73,6 +73,10 @@
 #define BKEEPER_Sp4FUND
 #endif
 
+#if defined(BKEEPER_ENABLE_Sp4ADJ) || (defined(BKEEPER_ENABLE_ALL) && !defined(BKEEPER_DISABLE_Sp4ADJ))
+#define BKEEPER_Sp4ADJ
+#endif
+
 #if defined(BKEEPER_ENABLE_Sp4TIS) || (defined(BKEEPER_ENABLE_ALL) && !defined(BKEEPER_DISABLE_Sp4TIS))
 #define BKEEPER_Sp4TIS
 #endif
