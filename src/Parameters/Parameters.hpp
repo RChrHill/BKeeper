@@ -13,4 +13,4 @@ struct BKeeperParameters : Grid::Serializable
     )
 };
 
-BKeeperParameters readParameterFile(std::string& filepath);
+bool readParameterFile(BKeeperParameters& out, std::string& filepath);

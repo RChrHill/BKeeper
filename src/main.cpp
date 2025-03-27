@@ -66,41 +66,44 @@ int main(int argc, char** argv)
     }
     parameterFileName = argv[1];
 
-    BKeeperParameters params = readParameterFile(parameterFileName);
-    auto group_infos = produceBenchmarkSchedule(params.benchmarks);
-    BKeeper::initLogger();
-
-    if (group_infos.empty())
-        std::cout << BKeeperLogMessage << "WARNING: NO RECOGNISED BENCHMARKS IN PARAMETERS FILE. EXITING..." << std::endl;
-    else
+    BKeeperParameters params;
+    if (readParameterFile(params, parameterFileName))
     {
-        initGrid(argc, argv);
-
+        auto group_infos = produceBenchmarkSchedule(params.benchmarks);
+        BKeeper::initLogger();
+    
+        if (group_infos.empty())
+            std::cout << BKeeperLogMessage << "WARNING: NO RECOGNISED BENCHMARKS IN PARAMETERS FILE. EXITING..." << std::endl;
+        else
         {
-            std::string msg = "# Setting up BKeeper with " + std::to_string(params.iterations) + " iterations and m=" + std::to_string(params.mass) + " #";
-            std::string borderline = "";
-            for (int i=0; i < msg.size(); ++i)
-                borderline += "#";
+            initGrid(argc, argv);
+    
+            {
+                std::string msg = "# Setting up BKeeper with " + std::to_string(params.iterations) + " iterations and m=" + std::to_string(params.mass) + " #";
+                std::string borderline = "";
+                for (int i=0; i < msg.size(); ++i)
+                    borderline += "#";
+    
+                std::cout << BKeeperLogMessage << borderline << std::endl;
+                std::cout << BKeeperLogMessage << msg        << std::endl;
+                std::cout << BKeeperLogMessage << borderline << std::endl;
+            }
+    
+            for (const auto& group_info : group_infos)
+            {
+                std::string msg = "# Performing benchmark for " + group_info.tag() + " #";
+    
+                std::string borderline = "";
+                for (int i=0; i < msg.size(); ++i)
+                    borderline += "#";
 
-            std::cout << BKeeperLogMessage << borderline << std::endl;
-            std::cout << BKeeperLogMessage << msg        << std::endl;
-            std::cout << BKeeperLogMessage << borderline << std::endl;
+                std::cout << BKeeperLogMessage << borderline << std::endl;
+                std::cout << BKeeperLogMessage << msg        << std::endl;
+                std::cout << BKeeperLogMessage << borderline << std::endl;
+                executeBenchmark(group_info, params);
+            }
+            teardownGrid();
         }
-
-        for (const auto& group_info : group_infos)
-        {
-            std::string msg = "# Performing benchmark for " + group_info.tag() + " #";
-
-            std::string borderline = "";
-            for (int i=0; i < msg.size(); ++i)
-                borderline += "#";
-
-            std::cout << BKeeperLogMessage << borderline << std::endl;
-            std::cout << BKeeperLogMessage << msg        << std::endl;
-            std::cout << BKeeperLogMessage << borderline << std::endl;
-            executeBenchmark(group_info, params);
-        }
-        teardownGrid();
     }
 
     return 0;
