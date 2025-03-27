@@ -114,8 +114,8 @@ void executeBenchmark(BKeeperParameters& params)
 
     double time = std::chrono::duration<double>(CGTimer.Elapsed()).count();
 
-    std::cout << BKeeperLogResult << "CG Run Time (s): " << time << std::endl;
-    std::cout << BKeeperLogResult << "FlOp/S (GFlOp/s):   " << gflops/time << std::endl;
-    std::cout << BKeeperLogResult << "Comms  (MB):     " << mcomms << std::endl;
-    std::cout << BKeeperLogResult << "Memory (GB):     " << gmem   << std::endl;
+    std::cout << BKeeperLogResult << "CG Run Time (s):       " << time << std::endl;
+    std::cout << BKeeperLogResult << "Performance (GFLOP/s): " << gflops/time << std::endl;
+    std::cout << BKeeperLogResult << "Comms  (MB):           " << mcomms << std::endl;
+    std::cout << BKeeperLogResult << "Memory (GB):           " << gmem   << std::endl;
 }
